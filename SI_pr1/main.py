@@ -182,6 +182,7 @@ def forward_checking(tablero):
             var.desasignar_valor()
             tablero.setCelda(fila, col, "0")
             dominios.restaurar(fila, col, valor_asignado)
+            variable.restaurar_dominio()
 
             var.eliminar(valor_asignado)
 
