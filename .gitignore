@@ -1,0 +1,63 @@
+# Archivos de Python compilados
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Archivos de configuración de IDEs
+.idea/
+.vscode/
+
+# Entornos virtuales
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Archivos de configuración de editor (como vim, emacs, etc.)
+*~
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Dependencias de Python instaladas
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Archivos de base de datos SQLite
+*.db
+*.sqlite3
+
+# Archivos de logs
+*.log
+
+# Archivos de configuración de sistemas operativos
+.DS_Store  # macOS
+Thumbs.db  # Windows
+
+# Otros archivos temporales
+*.egg
+*.egg-info/
+dist/
+build/
+*.manifest
+*.spec
+
+# Configuraciones específicas de Docker
+*.dockerignore
+Dockerfile
+
+# Archivos de cobertura de código
+.coverage
+.coverage.*
+nosetests.xml
+*.cover
+*.hypothesis/
+
+# Archivos de cache
+.cache/
+
+# Directorios de tests (si no deseas incluirlos)
+tests/__pycache__/
