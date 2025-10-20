@@ -154,6 +154,58 @@ def forward_checking(tablero):
         print(f"Valor siguiente posible: {valor}")
 
         if valor is not None:
+            if es_valido(tablero, fila, col, valor):
+                print(f"Asignando valor {valor} a variable {i} ya que es valido")
+                variable.asignar_valor(valor)
+                tablero.setCelda(fila, col, str(valor))
+
+                if dominios.asignar_valor(fila, col, valor, vacias):
+                    print(f"Dominio actualizado correctamente tras asignar {valor} en ({fila},{col})")
+                    stack.append((i, valor))
+                    i += 1
+                else:
+                    print(f"Dominio vacío tras asignar {valor} en ({fila},{col}), deshaciendo asignación")
+                    variable.eliminar(valor)
+                    variable.desasignar_valor()
+                    tablero.setCelda(fila, col, "0")
+
+        else:
+            print(f"No quedan valores posibles para variable {i} en posición ({fila},{col}), backtracking")
+            if not stack:
+                print("Pila vacía, no hay solución")
+                return False
+
+            i, valor_asignado = stack.pop()
+            var = vacias[i]
+            fila, col = var.pos
+
+            print(f"Retrocediendo a variable {i} en ({fila},{col}), desasignando valor {valor_asignado}")
+            var.desasignar_valor()
+            tablero.setCelda(fila, col, "0")
+            dominios.restaurar(fila, col, valor_asignado)
+            variable.restaurar_dominio()
+
+            var.eliminar(valor_asignado)
+
+    print("Solución encontrada!")
+    return True
+
+def AC3(tablero):
+    dominios = Domains(tablero,True)
+    vacias = buscar_vacias(tablero)
+
+    stack = []  # pila de (índice_variable, valor_asignado)
+    i = 0
+
+    while i < len(vacias):
+        variable = vacias[i]
+        fila, col = variable.pos
+
+        valor = variable.siguiente_posible()
+        print(f"\nIntentando variable {i} en posición ({fila},{col}) con dominio {variable.dominio}")
+        print(f"Valor siguiente posible: {valor}")
+
+        if valor is not None:
             print(f"Asignando valor {valor} a variable {i}")
             variable.asignar_valor(valor)
             tablero.setCelda(fila, col, str(valor))
@@ -188,8 +240,6 @@ def forward_checking(tablero):
 
     print("Solución encontrada!")
     return True
-
-
 #########################################################################  
 # Principal
 #########################################################################

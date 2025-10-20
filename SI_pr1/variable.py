@@ -46,18 +46,20 @@ class Variable:
 def calcular_box_index(i, j):
     return (i // 3) * 3 + (j // 3)
 
+#esta clase esta puesto como para ac3 ya que se hace un precomputo
 class Domains:
-    def __init__(self, tablero):
+    def __init__(self, tablero, ac3 = False):
         self.row_domains = [set(range(1, 10)) for _ in range(9)]
         self.col_domains = [set(range(1, 10)) for _ in range(9)]
         self.box_domains = [set(range(1, 10)) for _ in range(9)]
 
         # Inicializar dominios globales con los valores ya presentes
-        for i in range(9):
-            for j in range(9):
-                val = int(tablero.getCelda(i, j))
-                if val != 0:
-                    self.eliminar(i, j, val)
+        if ac3:
+            for i in range(9):
+                for j in range(9):
+                    val = int(tablero.getCelda(i, j))
+                    if val != 0:
+                        self.eliminar(i, j, val)
     
 
     def eliminar(self, i, j, val):
