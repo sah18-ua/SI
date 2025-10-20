@@ -76,7 +76,6 @@ class Domains:
         return self.row_domains[i] & self.col_domains[j] & self.box_domains[calcular_box_index(i, j)]
 
     def asignar_valor(self, i, j, val, vacias):
-        print(f"\nAsignando valor {val} en posición ({i},{j}) y actualizando dominios afectados...")
         self.eliminar(i, j, val)
         posiciones_afectadas = set()
 
@@ -103,21 +102,17 @@ class Domains:
             if var.pos in posiciones_afectadas and var.valor is None:
                 fila, col = var.pos
                 nuevo_dom = self.get_domain(fila, col)
-                print(f"  Actualizando dominio de variable en ({fila},{col}) a {nuevo_dom}")
                 actualizados.append(var)
 
                 if not nuevo_dom:
-                    print(f"  Dominio vacío detectado en ({fila},{col}), restaurando dominios y valor asignado")
                     self.restaurar(i, j, val)
                     for v in actualizados:
                         dom = self.get_domain(v.pos[0], v.pos[1])
                         v.actualizar_dominio(dom)
-                        print(f"    Restaurado dominio variable en {v.pos} a {dom}")
                     return False
 
                 var.actualizar_dominio(nuevo_dom)
 
-        print(f"Valor {val} asignado correctamente en ({i},{j}), dominios actualizados.")
         return True
 
         

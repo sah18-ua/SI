@@ -100,6 +100,13 @@ def buscar_vacias(tablero):
                 vacias.append(Variable(fila, col))
     return vacias
 
+#imprimir dominios
+def print_dominios(antes,despues):
+    espacio = " "*20
+    print("DOMINIOS ANTES DE AC3:   " + espacio+ espacio + "DOMINIOS DESPUÉS DE AC3:")
+    for var1, var2 in zip(antes,despues):
+        print(f"{var1.pos}   Dominio: {var1.dominio}{espacio}{var2.pos}   Dominio: {var2.dominio}")
+
 #resuelve por backtracking el sudoku
 def backtracking(tablero):
     pila = []  # pila de variables asignadas
@@ -191,9 +198,10 @@ def forward_checking(tablero):
     return True
 
 def AC3(tablero):
-    dominios = Domains(tablero,True)
     vacias = buscar_vacias(tablero)
-
+    original = copy.deepcopy(vacias)
+    dominios = Domains(tablero,True)
+    
     stack = []  # pila de (índice_variable, valor_asignado)
     i = 0
 
@@ -202,35 +210,27 @@ def AC3(tablero):
         fila, col = variable.pos
 
         valor = variable.siguiente_posible()
-        print(f"\nIntentando variable {i} en posición ({fila},{col}) con dominio {variable.dominio}")
-        print(f"Valor siguiente posible: {valor}")
 
         if valor is not None:
-            print(f"Asignando valor {valor} a variable {i}")
             variable.asignar_valor(valor)
             tablero.setCelda(fila, col, str(valor))
 
             if dominios.asignar_valor(fila, col, valor, vacias):
-                print(f"Dominio actualizado correctamente tras asignar {valor} en ({fila},{col})")
                 stack.append((i, valor))
                 i += 1
             else:
-                print(f"Dominio vacío tras asignar {valor} en ({fila},{col}), deshaciendo asignación")
                 variable.eliminar(valor)
                 variable.desasignar_valor()
                 tablero.setCelda(fila, col, "0")
 
         else:
-            print(f"No quedan valores posibles para variable {i} en posición ({fila},{col}), backtracking")
             if not stack:
-                print("Pila vacía, no hay solución")
                 return False
 
             i, valor_asignado = stack.pop()
             var = vacias[i]
             fila, col = var.pos
 
-            print(f"Retrocediendo a variable {i} en ({fila},{col}), desasignando valor {valor_asignado}")
             var.desasignar_valor()
             tablero.setCelda(fila, col, "0")
             dominios.restaurar(fila, col, valor_asignado)
@@ -238,7 +238,7 @@ def AC3(tablero):
 
             var.eliminar(valor_asignado)
 
-    print("Solución encontrada!")
+    print_dominios(original,vacias)
     return True
 #########################################################################  
 # Principal
@@ -299,7 +299,7 @@ def main():
                         print('Hay que cargar un sudoku')
                     else:                        
                         print("AC3")                        
-                        #aquí llamar al AC3    
+                        AC3(tablero) 
                
         #limpiar pantalla
         screen.fill(GREY)
